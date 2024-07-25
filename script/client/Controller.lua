@@ -106,7 +106,7 @@ function Interact:drawThread()
                 SetTextWrap(0.0, 0.5)
                 SetTextJustification(0)
                 SetTextOutline()
-                EndTextCommandDisplayText(0.5, 0.45)
+                EndTextCommandDisplayText(0.5, 0.505)
 
                 for k, _ in pairs(self.uiOptions) do
                     AddTextEntry("INTERACT_OPTIONS", self.uiOptions[k])
@@ -116,7 +116,7 @@ function Interact:drawThread()
                     SetTextWrap(0.0, 0.5)
                     SetTextJustification(0)
                     SetTextOutline()
-                    EndTextCommandDisplayText(0.5, 0.465 + (#self.uiOptions * 0.0025))
+                    EndTextCommandDisplayText(0.5, 0.520 + (#self.uiOptions * 0.0025))
                 end
             end
 
@@ -138,7 +138,7 @@ function Interact:nearbyThread()
                 SetTextEntry("STRING")
                 AddTextComponentString('.')
 
-                DrawText(0.5, 0.421)
+                DrawText(0.5, 0.473)
             end
             Wait(1)
         end
@@ -188,6 +188,7 @@ function Interact:updaterThread()
         while true do
             local res, error = pcall(function ()
                 hit, entityHit, endCoords, _, materialHash = lib.raycast.fromCamera(511, 7, 15.0)
+
                 local pedCoords = GetEntityCoords(cache.ped)
                 local distance = #(endCoords - pedCoords)
                 if hit == 1 then
