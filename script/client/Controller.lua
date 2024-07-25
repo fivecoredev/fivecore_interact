@@ -4,7 +4,9 @@ function Interact:constructor()
     self.draw = false
     self.nearby = false
 
-    self.text = ''
+    self.uiHeader = ''
+    self.uiOptions = {}
+
     self.currentActions = nil
     self.currentOption = 1
     self.currentRayCoords = nil
@@ -81,11 +83,11 @@ function Interact:drawThread()
                     end
                 end
 
-                if IsControlJustPressed(0, 15) then -- SCROLL UP
+                if IsControlJustPressed(0, 15) then
                     self.currentOption = self.currentOption - 1
                 end
 
-                if IsControlJustPressed(0, 14) then -- SCROLL DOWN
+                if IsControlJustPressed(0, 14) then
                     self.currentOption = self.currentOption + 1
                 end
 
@@ -97,15 +99,25 @@ function Interact:drawThread()
                     self.currentOption = #self.currentActions
                 end
 
+                AddTextEntry("INTERACT_HEADER", self.uiHeader)
+                BeginTextCommandDisplayText("INTERACT_HEADER")
                 SetTextFont(0)
                 SetTextScale(0.0, 0.25)
                 SetTextWrap(0.0, 0.5)
                 SetTextJustification(0)
                 SetTextOutline()
-                SetTextEntry("STRING")
-                AddTextComponentString(self.text)
+                EndTextCommandDisplayText(0.5, 0.45)
 
-                DrawText(0.5, 0.45)
+                for k, _ in pairs(self.uiOptions) do
+                    AddTextEntry("INTERACT_OPTIONS", self.uiOptions[k])
+                    BeginTextCommandDisplayText("INTERACT_OPTIONS")
+                    SetTextFont(0)
+                    SetTextScale(0.0, 0.25)
+                    SetTextWrap(0.0, 0.5)
+                    SetTextJustification(0)
+                    SetTextOutline()
+                    EndTextCommandDisplayText(0.5, 0.465 + (#self.uiOptions * 0.0025))
+                end
             end
 
             ::continue::
@@ -136,6 +148,7 @@ end
 function Interact:update(data)
     local description = ''
     local allowedActions = {}
+    self.uiOptions = {}
 
     for _, v in ipairs(data.actions) do
         if v.canInteract and not v.canInteract() then goto continue end
@@ -144,13 +157,15 @@ function Interact:update(data)
         description = description..'~c~['..(self.currentOption == #allowedActions and '~w~' or '~c~')..'E'..'~c~] '
         description = description..(self.currentOption == #allowedActions and '~w~' or '~c~')..v.text..'\n'
 
+        self.uiOptions[#self.uiOptions+1] = description
+
         ::continue::
     end
 
     if #allowedActions <= 0 then return false end
 
     self.currentActions = allowedActions
-    self.text = '~b~'..data.header..'\n'..description
+    self.uiHeader = '~b~'..data.header..'\n'
 
     return true
 end
