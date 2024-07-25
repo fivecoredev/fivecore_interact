@@ -7,22 +7,12 @@ author 'Fivecore'
 description ''
 version '1.0.0'
 
-shared_scripts {
-	'@ox_lib/init.lua'
-}
+shared_script '@ox_lib/init.lua'
 
 client_scripts {
-	'script/client/Controller.lua'
-}
-
-server_scripts {
-	-- 'script/server/Controller.lua'
+  'client/Controller.lua'
 }
 
 dependencies {
   'ox_lib'
-}
-
-escrow_ignore {
-
 }
